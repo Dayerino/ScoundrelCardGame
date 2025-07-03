@@ -48,3 +48,6 @@ example: you pick up a weapon of the value 10, you attack an Jack of Spades, you
 this means that the order in which you use the cards is very important
 
 # 2.regarding the terrible source code:
+rn im just happy i finished this, i will write about the process and start to finish
+
+just know im planning on refactoring ALOT of the code to make it more readable and more efficient
