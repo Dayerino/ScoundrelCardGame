@@ -47,4 +47,4 @@ weapons get weaker after they get used, everytime you attack a monster, you can 
 example: you pick up a weapon of the value 10, you attack an Jack of Spades, you take damage but can now only attack monsters lower or equal to it, so you cannot attack a Queen of Spades because it's value is higher than the jack,
 this means that the order in which you use the cards is very important
 
-# 2.the creation process and what i've learned while working on this:
+# 2.regarding the terrible source code:
