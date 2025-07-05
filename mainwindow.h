@@ -20,6 +20,8 @@
 #include <QDebug>
 #include <QGridLayout>
 #include <QMainWindow>
+#include <QPlainTextEdit>
+#include <QPushButton>
 
 using namespace std;
 class card {
@@ -142,7 +144,10 @@ private:
     void showDeck(vector<card> &Deck);
     void cardQueue(vector<card>&Deck,vector<card>&card1,vector<card>&card2,vector<card>&card3,vector<card>&card4,vector<card>&hand);
     //make a queue where only the first 4 cards are pushed into the card vectors
-    void moveCard(CardInSlot* clickedcard,vector<card>&card1,vector<card>&card2,vector<card>&card3,vector<card>&card4,vector<card>&Hand);
+    void movecard(std::vector<card>& hand,std::vector<card>& Deck,
+                              std::vector<card>& cardSlot,QPushButton* cardButton,QPlainTextEdit* textLog,
+                              QVBoxLayout* handLayout,
+                              int& healthbar,int& weaponPower,int& trueweaponPower);
     void movecard1(vector<card>&hand,vector<card>&Deck,vector<card>&card1,vector<card>&card2,vector<card>&card3,vector<card>&card4,int &healthbar, int &weaponPower,int &trueweaponPower);
     void movecard2(vector<card>&hand,vector<card>&Deck,vector<card>&card1,vector<card>&card2,vector<card>&card3,vector<card>&card4,int &healthbar, int &weaponPower,int &trueweaponPower);
     void movecard3(vector<card>&hand,vector<card>&Deck,vector<card>&card1,vector<card>&card2,vector<card>&card3,vector<card>&card4,int &healthbar, int &weaponPower,int &trueweaponPower);

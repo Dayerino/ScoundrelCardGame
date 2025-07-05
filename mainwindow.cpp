@@ -890,6 +890,95 @@ void MainWindow:: clearEverything(vector<card>&hand,vector<card>&Deck,vector<car
 }
 
 /*LETS DO EASY MODE FIRST x(*/
+void MainWindow::movecard(std::vector<card>& hand,std::vector<card>& Deck,
+              std::vector<card>& cardSlot,QPushButton* cardButton,
+              QPlainTextEdit* textLog,
+              QVBoxLayout* handLayout,
+                          int& healthbar,int& weaponPower,int& trueweaponPower){
+    if(!hand.empty() && cardSlot.empty()){
+        cout<<"error!"<<endl;
+        cout<<"card slot is empty!"<<endl;
+        textLog->setPlainText("error!\n cardslot is empty");
+    }
+    if(hand.empty()){
+        if(cardSlot[0].getsuite() == "Diamonds"){
+            isWeaponCursed = false;
+            textLog->setPlainText("weapon power: "+ QString::number(weaponPower));
+            hand.push_back(cardSlot[0]);
+            weaponPower = hand[0].getValue();
+            trueweaponPower = weaponPower;
+            textLog->setPlainText("equipping weapon!\n it's power value is" + QString::number(weaponPower));
+            CardInSlot* HandLabel = new CardInSlot(this,cardSlot[0].getFront());
+            HandLabel->setScaledContents(true);
+            HandLabel->setFixedSize(161,251);
+            HandLabel->setvalue(hand[0].getValue());
+            HandLabel->setsuite(hand[0].getsuite());
+            handLayout->addWidget(HandLabel);
+            /*removecard(rewrite this too)*/
+            cardButton->hide();
+        }
+        else if(cardSlot[0].getsuite() == "Hearts"){
+            cout<<"you drink a potion and heal"<<endl;
+            healthbar += cardSlot[0].getValue();
+            UpdateHealthBar(healthbar);
+            if(healthbar>=20){
+                healthbar = 20;
+                UpdateHealthBar(healthbar);
+            }
+            /*removeCard*/
+            cardButton->hide();
+        }
+        else if(cardSlot[0].getsuite() == "Clubs" || cardSlot[0].getsuite() == "Spades"){
+            cout<<"you punch the monster withyour bare hands!"<<endl;
+            healthbar -=cardSlot[0].getValue() - trueweaponPower;
+            weaponPower = cardSlot[0].getValue();
+            textLog->setPlainText("weaponPower:"+QString::number(trueweaponPower)+"\nlast killed monster power: "+QString::number(weaponPower));
+            /*removeCard*/
+            cardButton->hide();
+            UpdateHealthBar(healthbar);
+        }
+        /*terrible deck check*/
+    }else if(!hand.empty()){
+        if(hand[0].getsuite() == "Diamonds"){
+            if(cardSlot[0].getsuite() == "Diamonds"){
+                isWeaponCursed = false;
+                cout<<"switching weapons..."<<endl;
+                cout<<"the new weapon's value is: "<<cardSlot[0].getValue()<<endl;
+                hand[0] = cardSlot[0];
+                weaponPower = hand[0].getValue();
+                trueweaponPower = weaponPower;
+                textLog->setPlainText("weapon Power: "+QString::number(weaponPower));
+                QVBoxLayout* layout= qobject_cast<QVBoxLayout*>(ui->Hand->layout());
+                if(layout){
+                    for(int i = 0; i<layout->count(); i++){
+                        QLayoutItem* item = layout->itemAt(i);
+                        if(item){
+                            QWidget* widget = item->widget();
+                            if(widget){
+                                CardInSlot* cardLabel = qobject_cast<CardInSlot*>(widget);
+                                if(cardLabel){
+                                    layout->removeWidget(cardLabel);
+                                    cardLabel->deleteLater();
+                                    layout->update();
+                                }
+                            }
+                        }
+                    }
+                }
+                CardInSlot* newLabel = new CardInSlot(this,hand[0].getFront());
+                newLabel->setScaledContents(true);
+                newLabel->setFixedSize(161,251);
+                newLabel->setvalue(hand[0].getValue());
+                newLabel->setsuite(hand[0].getsuite());
+                ui->Hand->addWidget(newLabel);
+                ui->Hand->update();
+                //removeCard1(card1);
+                cardButton->hide();
+            }
+            /*stopped here*/
+        }
+    }
+}
 void MainWindow:: movecard1(vector<card>&hand,vector<card>&Deck,vector<card>&card1,vector<card>&card2,vector<card>&card3,vector<card>&card4,int &healthbar, int &weaponPower,int &trueweaponPower){
     if(!hand.empty() && card1.empty()){
         cout<<"error!"<<endl;
