@@ -830,6 +830,28 @@ void MainWindow::removeCard4(vector<card>&card4){
         ui->punchBtn4->hide();
     }
 }
+void MainWindow::removeCard(vector<card>&cardSlot,QVBoxLayout* cardLayout, QPushButton* punchButton){
+    for(int i = 0;i<cardLayout->count();i++){
+        QLayoutItem* item = cardLayout->itemAt(i);
+        if(item){
+            QWidget* widget = item->widget();
+            if(widget){
+                CardInSlot*cardLabel = qobject_cast<CardInSlot*>(widget);
+                if(cardLabel){
+                    cardLayout->removeWidget(cardLabel);
+                    cardLabel->deleteLater();
+                }
+            }
+        }
+    }
+    cardSlot.clear();
+    if(punchButton->isVisible()){
+        punchButton->hide();
+    }
+}
+
+
+
 void MainWindow::deleteDeck(vector<card>&Deck){
     QVBoxLayout *layout = qobject_cast<QVBoxLayout*>(ui->Deck->layout());
     if(layout && layout->count()>0){
@@ -891,10 +913,10 @@ void MainWindow:: clearEverything(vector<card>&hand,vector<card>&Deck,vector<car
 
 /*LETS DO EASY MODE FIRST x(*/
 void MainWindow::movecard(std::vector<card>& hand,std::vector<card>& Deck,
-              std::vector<card>& cardSlot,QPushButton* cardButton,
+              std::vector<card>& cardSlot,QPushButton* cardButton,QPushButton* cardPunchButton,
               QPlainTextEdit* textLog,
               QVBoxLayout* handLayout,
-                          int& healthbar,int& weaponPower,int& trueweaponPower){
+                          int& healthbar,int& weaponPower,int& trueweaponPower,QVBoxLayout* cardLayout){
     if(!hand.empty() && cardSlot.empty()){
         cout<<"error!"<<endl;
         cout<<"card slot is empty!"<<endl;
@@ -915,6 +937,7 @@ void MainWindow::movecard(std::vector<card>& hand,std::vector<card>& Deck,
             HandLabel->setsuite(hand[0].getsuite());
             handLayout->addWidget(HandLabel);
             /*removecard(rewrite this too)*/
+            removeCard(cardSlot,cardLayout,cardPunchButton);
             cardButton->hide();
         }
         else if(cardSlot[0].getsuite() == "Hearts"){
@@ -926,6 +949,7 @@ void MainWindow::movecard(std::vector<card>& hand,std::vector<card>& Deck,
                 UpdateHealthBar(healthbar);
             }
             /*removeCard*/
+            removeCard(cardSlot,cardLayout,cardPunchButton);
             cardButton->hide();
         }
         else if(cardSlot[0].getsuite() == "Clubs" || cardSlot[0].getsuite() == "Spades"){
@@ -934,6 +958,7 @@ void MainWindow::movecard(std::vector<card>& hand,std::vector<card>& Deck,
             weaponPower = cardSlot[0].getValue();
             textLog->setPlainText("weaponPower:"+QString::number(trueweaponPower)+"\nlast killed monster power: "+QString::number(weaponPower));
             /*removeCard*/
+            removeCard(cardSlot,cardLayout,cardPunchButton);
             cardButton->hide();
             UpdateHealthBar(healthbar);
         }
@@ -973,7 +998,91 @@ void MainWindow::movecard(std::vector<card>& hand,std::vector<card>& Deck,
                 ui->Hand->addWidget(newLabel);
                 ui->Hand->update();
                 //removeCard1(card1);
+                removeCard(cardSlot,cardLayout,cardPunchButton);
                 cardButton->hide();
+            }else if(cardSlot[0].getsuite() == "Hearts"){
+                cout<<"you drink a potion and heal"<<endl;
+                healthbar += cardSlot[0].getValue();
+                if(healthbar > 20){/*health cap*/
+                    healthbar = 20;
+                    UpdateHealthBar(healthbar);
+                }else{
+                    UpdateHealthBar(healthbar);
+                }
+                //removeCard1(card1);
+                removeCard(cardSlot,cardLayout,cardPunchButton);
+                cardButton->hide();
+            }
+            else if(cardSlot[0].getsuite() == "Clubs" || cardSlot[0].getsuite() == "Spades"){
+                monsterPower = cardSlot[0].getValue();
+                if(isWeaponCursed == false){
+                    if(trueweaponPower>=monsterPower){
+                        cout<<"your weapon is stronger than the monster!"<<endl;
+                        cout<<"you slay the monster without taking damage"<<endl;
+                        cout<<"your weapon has been cursed..."<<endl;
+                        isWeaponCursed = true;
+                        cout<<"it can only attack monsters weaker than the one you've just slain"<<endl;
+                        weaponPower = monsterPower;
+                        cout<<"its current strength is: "<<hand[0].getValue()<<endl;
+                        textLog->setPlainText("weapon power: "+ QString::number(trueweaponPower)+"\nlast killed monster: "+QString::number(weaponPower));
+                        cardButton->hide();
+                        //removeCard1(card1);
+                        removeCard(cardSlot,cardLayout,cardPunchButton);
+                    }
+                    else if(trueweaponPower<monsterPower){
+                        int damageTaken = monsterPower - trueweaponPower;
+                        cout<<"your weapon is weaker than the monster!"<<endl;
+                        cout<<"you slay the monster but take "<<damageTaken<<" damage!"<<endl;
+                        healthbar -= damageTaken;
+                        isWeaponCursed = true;
+                        cout<<"it can now only attack monsters weaker than the one you've just slain"<<endl;
+                        /*update true weapon power only when the weapon gets cursed*/
+                        weaponPower = monsterPower;
+                        textLog->setPlainText("weapon power: "+ QString::number(trueweaponPower)+"\nlast killed monster: "+QString::number(weaponPower));
+                        UpdateHealthBar(healthbar);
+                        /*GAME OVER CHECK HERE*/
+                       // removeCard1(card1);
+                       // ui->card1btn->hide();
+                        removeCard(cardSlot,cardLayout,cardPunchButton);
+                        cardButton->hide();
+                    }
+                }
+                else if(isWeaponCursed == true){
+                    if(weaponPower<monsterPower){
+                        cout<<"your weapon is cursed!!"<<endl;
+                        cout<<"you can only attack monsters weaker than it!"<<endl;
+                        cout<<"it's current strength is: "<<weaponPower<<endl;
+                    }
+                    else if(weaponPower>=monsterPower){
+                        if(monsterPower>=trueweaponPower){
+                            cout<<"the monster is weaker than the last monster you've slain!"<<endl;
+                            int damageTaken = monsterPower - trueweaponPower;
+                            healthbar -= damageTaken;
+                            weaponPower = monsterPower;
+                            cout<<"you slay it but take "<<damageTaken<<" damage"<<endl;
+                            cout<<"you can now only attack monsters weaker than this one"<<endl;
+                            cout<<"your current weapon strength is: "<<weaponPower<<endl;
+                            textLog->setPlainText("weapon power: "+ QString::number(trueweaponPower)+"\nlast killed monster: "+QString::number(weaponPower));
+                            UpdateHealthBar(healthbar);
+                            //removeCard1(card1);
+                            //ui->card1btn->hide();
+                            removeCard(cardSlot,cardLayout,cardPunchButton);
+                            cardButton->hide();
+                        }
+                        else if(monsterPower<trueweaponPower){
+                            cout<<"you attack a weaker monster with your cursed sword"<<endl;
+                            cout<<"you can now only attack monsters weaker than that one"<<endl;
+                            weaponPower = monsterPower;
+                            cout<<"the new weapon value is"<<weaponPower<<endl;
+                            textLog->setPlainText("weapon power: "+ QString::number(trueweaponPower)+"\nlast killed monster: "+QString::number(weaponPower));
+                            //removeCard1(card1);
+                            //ui->card1btn->hide();
+                            removeCard(cardSlot,cardLayout,cardPunchButton);
+                            cardButton->hide();
+
+                        }
+                    }
+                }
             }
             /*stopped here*/
         }
@@ -1674,7 +1783,8 @@ void MainWindow:: movecard4(vector<card>&hand,vector<card>&Deck,vector<card>&car
 
 void MainWindow::on_card1btn_clicked()
 {
-    movecard1(Hand,Deck,card1,card2,card3,card4,healthbar, weaponPower,trueweaponPower);
+    //movecard1(Hand,Deck,card1,card2,card3,card4,healthbar, weaponPower,trueweaponPower);
+    movecard(Hand,Deck,card1,ui->card1btn,ui->punchBtn1,ui->textLog,ui->Hand,healthbar,weaponPower,trueweaponPower,ui->Card1);
      ui->escapeRoom->hide();
 
 }

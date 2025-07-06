@@ -134,6 +134,7 @@ private:
     bool isWeaponCursed, escapedLastRoom;
     int healthbar = 20 , weaponPower = 0, trueweaponPower= 0,  monsterPower = 0;
     bool gameOver(int &healthbar), cardBack;
+    void removeCard(vector<card>&cardSlot,QVBoxLayout* cardLayout, QPushButton* punchButton);
     void removeCard1(vector<card>&card1);
     void removeCard2(vector<card>&card2);
     void removeCard3(vector<card>&card3);
@@ -145,9 +146,9 @@ private:
     void cardQueue(vector<card>&Deck,vector<card>&card1,vector<card>&card2,vector<card>&card3,vector<card>&card4,vector<card>&hand);
     //make a queue where only the first 4 cards are pushed into the card vectors
     void movecard(std::vector<card>& hand,std::vector<card>& Deck,
-                              std::vector<card>& cardSlot,QPushButton* cardButton,QPlainTextEdit* textLog,
+                              std::vector<card>& cardSlot,QPushButton* cardButton,QPushButton* cardPunchButton,QPlainTextEdit* textLog,
                               QVBoxLayout* handLayout,
-                              int& healthbar,int& weaponPower,int& trueweaponPower);
+                              int& healthbar,int& weaponPower,int& trueweaponPower,QVBoxLayout* cardLayout);
     void movecard1(vector<card>&hand,vector<card>&Deck,vector<card>&card1,vector<card>&card2,vector<card>&card3,vector<card>&card4,int &healthbar, int &weaponPower,int &trueweaponPower);
     void movecard2(vector<card>&hand,vector<card>&Deck,vector<card>&card1,vector<card>&card2,vector<card>&card3,vector<card>&card4,int &healthbar, int &weaponPower,int &trueweaponPower);
     void movecard3(vector<card>&hand,vector<card>&Deck,vector<card>&card1,vector<card>&card2,vector<card>&card3,vector<card>&card4,int &healthbar, int &weaponPower,int &trueweaponPower);
