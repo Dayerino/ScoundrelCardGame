@@ -643,7 +643,7 @@ void MainWindow::terribleDeckCheck(vector<card>card1,vector<card>card2,vector<ca
             ui->RestartBtn->show();
             ui->Dealbtn->hide();
         }
-    }
+    }/*MUST FIX THIS*/
 
 void MainWindow::on_Dealbtn_clicked()
 {
@@ -1792,24 +1792,23 @@ void MainWindow::on_card1btn_clicked()
 
 void MainWindow::on_card2btn_clicked()
 {
-    movecard2(Hand,Deck,card1,card2,card3,card4,healthbar, weaponPower,trueweaponPower);
-     ui->escapeRoom->hide();
-
+    movecard(Hand,Deck,card2,ui->card2btn,ui->punchBtn2,ui->textLog,ui->Hand,healthbar,weaponPower,trueweaponPower,ui->Card2);
+    ui->escapeRoom->hide();
 }
 
 
 void MainWindow::on_card3btn_clicked()
 {
-    movecard3(Hand,Deck,card1,card2,card3,card4,healthbar, weaponPower,trueweaponPower);
-     ui->escapeRoom->hide();
+    movecard(Hand,Deck,card3,ui->card3btn,ui->punchBtn3,ui->textLog,ui->Hand,healthbar,weaponPower,trueweaponPower,ui->Card3);
+    ui->escapeRoom->hide();
 
 }
 
 
 void MainWindow::on_card4btn_clicked()
 {
-    movecard4(Hand,Deck,card1,card2,card3,card4,healthbar, weaponPower,trueweaponPower);
-     ui->escapeRoom->hide();
+    movecard(Hand,Deck,card4,ui->card4btn,ui->punchBtn4,ui->textLog,ui->Hand,healthbar,weaponPower,trueweaponPower,ui->Card4);
+    ui->escapeRoom->hide();
 
 }
 
@@ -1823,7 +1822,23 @@ void MainWindow::on_RestartBtn_clicked()
     ui->Startbtn->show();
     ui->RestartBtn->hide();
     }
+ void MainWindow::punchCard(vector<card>&cardSlot,QPushButton* PunchButton, QPushButton* CardButton,QVBoxLayout*CardLayout,QPushButton *escapeRoom,int&healthbar,QPlainTextEdit* textlog,int trueweaponPower, int weaponPower){
+     if(cardSlot[0].getsuite() == "Clubs" || cardSlot[0].getsuite() == "Spades"){
+        escapeRoom->hide();
+     }
+     cout<<"you punch the monster with your bare hands!"<<endl;
+     healthbar -=cardSlot[0].getValue() - 0;
+     textlog->setPlainText("weapon power: " + QString::number(trueweaponPower)+"\nlast killed monster power: "+ QString::number(weaponPower));
+    removeCard(cardSlot,CardLayout,PunchButton);
+     //removeCard(vector<card>&cardSlot,QVBoxLayout* cardLayout, QPushButton* punchButton
+    CardButton->hide();
+    UpdateHealthBar(healthbar);
+    if(gameOver(healthbar)){
+        ui->RestartBtn->show();
+    }
+    PunchButton->hide();
 
+}
 void MainWindow::punchCard1(vector<card>&card1){
     if(card1[0].getsuite() == "Clubs" || card1[0].getsuite() == "Spades"){
          ui->escapeRoom->hide();
@@ -1897,28 +1912,28 @@ void MainWindow::punchCard4(vector<card>&card4){
 //the set up is inside the deal button
 void MainWindow::on_punchBtn1_clicked()
 {
-    punchCard1(card1);
+    punchCard(card1,ui->punchBtn1,ui->card1btn,ui->Card1,ui->escapeRoom,healthbar,ui->textLog,trueweaponPower,weaponPower);
     terribleDeckCheck(card1,card2,card3,card4,Deck);
 }
 
 
 void MainWindow::on_punchBtn2_clicked()
 {
-    punchCard2(card2);
+    punchCard(card2,ui->punchBtn2,ui->card2btn,ui->Card2,ui->escapeRoom,healthbar,ui->textLog,trueweaponPower,weaponPower);
     terribleDeckCheck(card1,card2,card3,card4,Deck);
 }
 
 
 void MainWindow::on_punchBtn3_clicked()
 {
-    punchCard3(card3);
+    punchCard(card3,ui->punchBtn3,ui->card3btn,ui->Card3,ui->escapeRoom,healthbar,ui->textLog,trueweaponPower,weaponPower);
     terribleDeckCheck(card1,card2,card3,card4,Deck);
 }
 
 
 void MainWindow::on_punchBtn4_clicked()
 {
-    punchCard4(card4);
+    punchCard(card4,ui->punchBtn4,ui->card4btn,ui->Card4,ui->escapeRoom,healthbar,ui->textLog,trueweaponPower,weaponPower);
     terribleDeckCheck(card1,card2,card3,card4,Deck);
 }
 

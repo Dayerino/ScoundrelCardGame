@@ -157,6 +157,7 @@ private:
     void debugDeal(vector<card>&Deck,vector<card>&card1,vector<card>&card2,vector<card>&card3,vector<card>&card4);
     void UpdateHealthBar(int &healthbar);
     void clearEverything(vector<card>&hand,vector<card>&Deck,vector<card>&card1,vector<card>&card2,vector<card>&card3,vector<card>&card4,int &healthbar, int &weaponPower,int &trueweaponPower);
+    void punchCard(vector<card>&cardSlot,QPushButton* PunchButton, QPushButton* CardButton,QVBoxLayout*CardLayout,QPushButton * escapeRoom,int &healthbar,QPlainTextEdit* textlog,int trueweaponPower, int weaponPower);
     void punchCard1(vector<card>&card1);
     void punchCard2(vector<card>&card2);
     void punchCard3(vector<card>&card3);
