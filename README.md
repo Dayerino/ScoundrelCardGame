@@ -1,5 +1,5 @@
 # ScoundrelCardGame
-a card game made with QT Creator, its based off the game called Scoundrel, it is a single player dungeon crawler it was created by Zach Gage and Kurt Bieg
+a card game made with QT Creator, its based off the game called Scoundrel, it is a single player dungeon crawler  created by Zach Gage and Kurt Bieg
 
 # 1.Game Description:
 
