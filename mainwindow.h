@@ -125,8 +125,7 @@ signals:
 protected:
     void mousePressEvent(QMouseEvent* event)override{
         emit clicked();
-    }//must add widgets to the main window and see if this only works on the main widget or on anything
-    //it still shows and hides the button, have to find a way to limit it
+    }
 
 private:
     Ui::MainWindow *ui;
@@ -135,36 +134,26 @@ private:
     int healthbar = 20 , weaponPower = 0, trueweaponPower= 0,  monsterPower = 0;
     bool gameOver(int &healthbar), cardBack;
     void removeCard(vector<card>&cardSlot,QVBoxLayout* cardLayout, QPushButton* punchButton);
-    void removeCard1(vector<card>&card1);
-    void removeCard2(vector<card>&card2);
-    void removeCard3(vector<card>&card3);
-    void removeCard4(vector<card>&card4);
     void deleteDeck(vector<card>&Deck);
     void createDeck(vector<card>&Deck);
     void shuffleDeck(vector<card>&Deck);
     void showDeck(vector<card> &Deck);
     void cardQueue(vector<card>&Deck,vector<card>&card1,vector<card>&card2,vector<card>&card3,vector<card>&card4,vector<card>&hand);
-    //make a queue where only the first 4 cards are pushed into the card vectors
     void movecard(std::vector<card>& hand,std::vector<card>& Deck,
                               std::vector<card>& cardSlot,QPushButton* cardButton,QPushButton* cardPunchButton,QPlainTextEdit* textLog,
                               QVBoxLayout* handLayout,
                               int& healthbar,int& weaponPower,int& trueweaponPower,QVBoxLayout* cardLayout);
-    void movecard1(vector<card>&hand,vector<card>&Deck,vector<card>&card1,vector<card>&card2,vector<card>&card3,vector<card>&card4,int &healthbar, int &weaponPower,int &trueweaponPower);
-    void movecard2(vector<card>&hand,vector<card>&Deck,vector<card>&card1,vector<card>&card2,vector<card>&card3,vector<card>&card4,int &healthbar, int &weaponPower,int &trueweaponPower);
-    void movecard3(vector<card>&hand,vector<card>&Deck,vector<card>&card1,vector<card>&card2,vector<card>&card3,vector<card>&card4,int &healthbar, int &weaponPower,int &trueweaponPower);
-    void movecard4(vector<card>&hand,vector<card>&Deck,vector<card>&card1,vector<card>&card2,vector<card>&card3,vector<card>&card4,int &healthbar, int &weaponPower,int &trueweaponPower);
     void debugDeck(vector<card>&Deck);
     void debugDeal(vector<card>&Deck,vector<card>&card1,vector<card>&card2,vector<card>&card3,vector<card>&card4);
     void UpdateHealthBar(int &healthbar);
     void clearEverything(vector<card>&hand,vector<card>&Deck,vector<card>&card1,vector<card>&card2,vector<card>&card3,vector<card>&card4,int &healthbar, int &weaponPower,int &trueweaponPower);
     void punchCard(vector<card>&cardSlot,QPushButton* PunchButton, QPushButton* CardButton,QVBoxLayout*CardLayout,QPushButton * escapeRoom,int &healthbar,QPlainTextEdit* textlog,int trueweaponPower, int weaponPower);
-    void punchCard1(vector<card>&card1);
-    void punchCard2(vector<card>&card2);
-    void punchCard3(vector<card>&card3);
-    void punchCard4(vector<card>&card4);
     void escapeRoom(vector<card>&card1,vector<card>&card2,vector<card>&card3,vector<card>&card4,vector<card>&Deck,bool &escapedLastRoom,vector<card>hand);
     void cardCounter(vector<card>Deck);
     /*absolute abomination*/
     void terribleDeckCheck(vector<card>card1,vector<card>card2,vector<card>card3,vector<card>card4,vector<card>Deck);
 };
+/*current progress message:
+ i cleaned up the logic for card interactions, so instead of 4 different functions for each card slot i made a function which allows me to handle each
+same thing for punching cards*/
 #endif // MAINWINDOW_H
