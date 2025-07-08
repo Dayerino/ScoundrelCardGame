@@ -48,6 +48,50 @@ example: you pick up a weapon of the value 10, you attack an Jack of Spades, you
 this means that the order in which you use the cards is very important
 
 # 2.regarding the terrible source code:
-rn im just happy i finished this, i will write about the process and start to finish
+i tried making this multiple times, this was my 5th time, i gave up on the other tries after wanting to make the card interactions without resorting to buttons(i still want to do this)
 
-just know im planning on refactoring ALOT of the code to make it more readable and more efficient
+the big issue i had with that approach was using a lambda function and trying to connect it to the card labels, it could only take a copy of the label and not a reference, that stopped me from taking the values from the cards. so i decided to do the "easy" way.
+
+# 2.1 The "easy" way:
+
+separating the card logic and the UI cards was much easier to do and made this project "completable" without relying too much on ai to write all of the code for me, because i could have finished this the way i wanted to if i were to "vibe" code it(i did not want to do that), while i did use ai to help me find the labels and keywords i needed for the QT framework (instead of reading documentation) it's impact only stopped there.
+
+so with this approach, all i had to do was create buttons to serve as actions the player could take, there are only 2 buttons under each card, the card button to select the card itself and one below it that only appears when the card is a "monster" card, this punch button allows the player to punch the monster and take it's value as damage instead of cursing their weapon if they had one equipped(note: if the player selects a monster card when they have no cards in hand they effectively "punch" the monster and take damage the same way), when pressing the card on a health potion card the player gains that much health (capped to 20 as mentioned before), and finally if the card is a sword, the player equips it replacing any weapon they had equipped.
+
+# 2.1.1 The back end:
+
+cards are moved into 4 vectors of cards each labeled after the slots they are in:
+
+when potion cards are used they get removed from the slot and deleted
+
+when weapons are equipped they get moved to the "hand" vector, replacing any element that was in it
+
+when monsters are attacked the card slot vector's first element (which is the monster card) is compared to the first element of the hand slot vector, if the hand vector is empty the player takes full damage.
+
+if the player has a weapon equipped, first there is a check to see if the weapon is cursed, if not that it gets cursed and gains a value called "weaponPower", this value changes, unlike the weapon's "trueWeaponPower" value which does not change
+
+then the calculation happens to see how much damage the player takes if any, this compares monster's attack power vs weapon's weaponPower(or trueWeaponPower if it is not cursed yet)
+
+after this the weapon gets cursed
+
+# 2.1.2 Cursed weapons:
+
+cursed weapons are weapons which can only attack a monster lower than their weaponPower.
+
+for example if your weapon's trueWeaponPower is 10, you can attack a monster stronger than 10 when it is not cursed, then it gains that weapon's power value as the new baseline to check if you can attack next time.
+
+the damage calculation is always equal to monsterPower - trueWeaponPower
+
+if your weapon is too weak for any monster in the room and you cannot replace it you will have to punch the remaining monsters or escape the room
+
+# 2.2 Escape the room:
+
+there is a mechanic which players can use to either save themselves from an impossible to beat room or to save some good cards for later down the line 
+
+the limitation to this is that players cannot escape 2 rooms in a row, so the option only appears if the player had not escaped the previous room
+
+after escaping the room, the deck gets shuffeled again, unlike in the real game where only the 4 cards are shuffeled and then placed at the bottom of the deck
+
+# 3. Going forward:
+
+this project is really just me learning how to enjoy programming and i learned that, at least for me, programming a project gets fun when you have a clear plan on what how you want to do it, at first i was procrastinating it, only writing a few lines a day, but as i reached some milestones i got really into it and worked on it alot more and started having fun with it, i will hopefully keep this in mind for my next projects!
